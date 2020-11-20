@@ -1,11 +1,19 @@
-import React from 'react';
-import { Form, Input, Button } from 'antd';
+import React,{useEffect} from 'react';
+import { Form, Input, Button, notification } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
+import { useActions, useValues } from 'kea'
+import appLogic from '../logic/appLogic'
+import _ from "lodash"
 const SignIn = () => {
+    const{ signInNormal, signInGoogle,setError} = useActions(appLogic)
+    const {error} =useValues(appLogic)
 
+
+    
     const onFinish = (values) => {
         console.log('Received values of form: ', values);
+        signInNormal(values)
       };
 
 
@@ -17,7 +25,10 @@ const SignIn = () => {
           span: 8,
         },
       };
+
+
     return ( 
+
         
         <Form
       name="normal_login"
@@ -33,11 +44,11 @@ const SignIn = () => {
     }}
     >
       <Form.Item
-        name="username"
+        name="email"
         rules={[
           {
             required: true,
-            message: 'Please input your Username!',
+            message: 'Please input your Email!',
           },
         ]}
       >
@@ -67,14 +78,14 @@ const SignIn = () => {
         <Form.Item>
         <p>or</p>
         <p>
-        <Button type="danger" htmlType="button" >
+        <Button type="danger" htmlType="button" onClick={() => signInGoogle()} >
         Sign in with Google
         </Button></p>
         <p>
         <Link to="signup">Don't have an account? Sign up here</Link></p>
         <p><Link to="forgot-password">Forgot Password ?</Link></p>
         </Form.Item>
-
+    
     </Form>
      );
 }

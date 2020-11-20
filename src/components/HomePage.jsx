@@ -1,15 +1,17 @@
 import React from 'react';
-import { PageHeader, Button, Space,Card ,Layout} from 'antd';
+import { Button, Space} from 'antd';
 import {Link}  from 'react-router-dom';
-import { Content, Footer, Header } from 'antd/lib/layout/layout';
-const HomePage = () => {
+import { useActions } from 'kea'
+import appLogic from '../logic/appLogic'
+import { useHistory } from 'react-router'
+  const HomePage = () => {
+    
+    const history = useHistory()
+  const{ signOut} = useActions(appLogic)
   return (
  
-      
-    <Layout >
- 
-    <Content  style={{marginTop:"200px",justifyContent:"center"}} >
-      <Space direction='vertical' size='large' align='center'>
+    
+      <Space direction='vertical' size='large' align='center'  style={{marginTop:"200px",justifyContent:"center"}}>
         <Button type='primary' block size="large" >
         <Link to="/health-tracker">Track your Health</Link>
 
@@ -23,10 +25,18 @@ const HomePage = () => {
         <Button type='primary' block size="large">
           Predict
         </Button>
+        <Button type='danger' onClick={() => {
+          signOut()
+          history.go(0)
+          }} >
+          <Link to="/">Sign Out</Link>
+        </Button>
+
       </Space>
-      </Content>
-      <Footer>Health Tracker</Footer>
-      </Layout>
+
+    
+
+     
  
   );
 };

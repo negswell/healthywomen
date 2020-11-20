@@ -1,14 +1,27 @@
 import React from 'react';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, notification } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
+import { useActions, useValues } from 'kea'
+import appLogic from '../logic/appLogic'
+import _ from "lodash"
 const SignUp = () => {
+    const{ signUpNormal, signInGoogle,setError} = useActions(appLogic)
+    const {error} =useValues(appLogic)
 
+
+    const notify=() =>{
+        notification['error']({
+            message: error,
+            duration:2
+
+      });
+      setError("")
+    }
     const onFinish = (values) => {
         console.log('Received values of form: ', values);
+        signUpNormal(values)
       };
-
-
       const layout = {
         labelCol: {
           span: 6,
@@ -18,7 +31,6 @@ const SignUp = () => {
         },
       };
     return ( 
-        
         <Form
       name="login"
       {...layout}
@@ -32,11 +44,11 @@ const SignUp = () => {
     }}
     >
       <Form.Item
-        name="username"
+        name="email"
         rules={[
           {
             required: true,
-            message: 'Please input your Username!',
+            message: 'Please input your Email!',
           },
         ]}
       >
@@ -59,21 +71,21 @@ const SignUp = () => {
       </Form.Item>
 
       <Form.Item>
-        <Button type="primary" htmlType="submit" >
+        <Button type="primary" htmlType="submit"  >
           Sign Up
         </Button>
         </Form.Item>
         <Form.Item>
         <p>or</p>
         <p>
-        <Button type="danger" htmlType="button" >
+        <Button type="danger" htmlType="button" onClick={() =>signInGoogle()} >
         Sign in with Google
         </Button></p>
         <p>
         <Link to="/"> Already have an account? Sign in here</Link></p>
 
         </Form.Item>
-
+        {!_.isEmpty(error) && notify()}
     </Form>
      );
 }

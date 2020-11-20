@@ -4,11 +4,24 @@ import './index.css';
 import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
+import { resetContext, getContext } from 'kea' 
+import { Provider } from 'react-redux' 
 
+
+resetContext({ // 👈 add this    
+  createStore: {
+      // options for redux (e.g. middleware, reducers, ...)
+  },
+  plugins: [
+      // additional kea plugins
+  ],
+})
 ReactDOM.render(
+  <Provider store={getContext().store}>
   <React.StrictMode>
     <App />
-  </React.StrictMode>,
+  </React.StrictMode>
+  </Provider>,
   document.getElementById('root')
 );
 

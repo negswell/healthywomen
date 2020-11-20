@@ -1,17 +1,14 @@
-import React,{useState} from 'react';
+import React from 'react';
 import { Form, Input, Button ,notification} from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { UserOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 const ForgotPassword = () => {
 
-    const [email, setEmail] = useState("");
-  const [error, setError] = useState(null);
-
     const onFinish = (values) => {
         console.log('Received values of form: ', values);
-        setEmail(values.email)
+      
         notification['success']({
-            message: 'Email has been sent to you !',
+            message: 'Reset Password Email has been sent to you !',
             duration:2
       });
     }
