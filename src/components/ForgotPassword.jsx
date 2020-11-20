@@ -2,15 +2,18 @@ import React from 'react';
 import { Form, Input, Button ,notification} from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
+import { useActions, useValues } from 'kea'
+import appLogic from '../logic/appLogic'
 const ForgotPassword = () => {
-
+  const{ resetPassword} = useActions(appLogic)
     const onFinish = (values) => {
         console.log('Received values of form: ', values);
-      
+        resetPassword(values.email)
         notification['success']({
             message: 'Reset Password Email has been sent to you !',
             duration:2
       });
+     
     }
 
 

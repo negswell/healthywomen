@@ -12,20 +12,34 @@ import { auth } from './components/Config';
 import { useActions, useValues } from 'kea';
 import appLogic from './logic/appLogic';
 import _ from 'lodash';
-import { Form, Input, Button, notification } from 'antd';
+import { notification } from 'antd';
+import { useState } from 'react';
+import { Spin } from 'antd';
+import AddRecord from './components/AddRecord';
 
 function App() {
-  const { user, error } = useValues(appLogic);
+  const { error } = useValues(appLogic);
   const { setUser, setError } = useActions(appLogic);
 
+  const [authenticated, setAuthenticated] = useState(false);
+  const [loadingAuth, setLoadingAuth] = useState(true);
+
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((userAuth) => {
+    const unsubscribe = firebase.auth().onAuthStateChanged((userAuth) => {
+      setLoadingAuth(false);
+
+      console.log(userAuth);
       if (userAuth !== null) {
         setUser(userAuth);
+        setAuthenticated(true);
         console.log(userAuth.email);
+      } else {
+        setAuthenticated(false);
       }
     });
+
     console.log(auth.currentUser);
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
@@ -34,16 +48,29 @@ function App() {
         message: error,
         duration: 2,
       });
+      console.log(error);
       setError('');
     }
-  }, []);
+  }, [error]);
 
   return (
     <div className='App'>
-      {!_.isEmpty(auth.currentUser) ? (
+      {loadingAuth ? (
+        <Spin
+          size='large'
+          spinning={loadingAuth}
+          style={{
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+          }}
+        />
+      ) : authenticated ? (
         <BrowserRouter>
           <Route exact path='/' component={HomePage} />
           <Route path='/health-tracker' component={HealthTracker} />
+          <Route path='/add-record' component={AddRecord} />
         </BrowserRouter>
       ) : (
         <BrowserRouter>

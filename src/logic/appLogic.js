@@ -14,6 +14,7 @@ const appLogic = kea({
     setUser: (user) => ({ user }),
     signInGoogle: true,
     signOut: true,
+    resetPassword: (email) => ({ email }),
     signInNormal: (userDetails) => ({ userDetails }),
     signUpNormal: (userDetails) => ({ userDetails }),
   },
@@ -71,6 +72,16 @@ const appLogic = kea({
         // actions.setUser(user)
       } catch (error) {
         console.log('error in sign out', error);
+        actions.setError(error.message);
+      }
+    },
+    resetPassword: async ({ email }) => {
+      try {
+        await auth.sendPasswordResetEmail(email);
+
+        // actions.setUser(user)
+      } catch (error) {
+        console.log('error in resetting password', error);
         actions.setError(error.message);
       }
     },
